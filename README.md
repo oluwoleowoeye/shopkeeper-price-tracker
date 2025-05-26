@@ -72,6 +72,9 @@ A modern web application that helps shopkeepers track and manage their inventory
 ### Closing (10 seconds)
 "Start tracking your inventory prices more efficiently today with Shopkeeper Price Tracker."
 
+[🚀 Live Demo]([your-bolt-link](https://bolt.new/~/sb1-dqjmbigi
+))  
+[💻 GitHub Code]([your-github-link](https://github.com/oluwoleowoeye/shopkeeper-price-tracker))
 ## License
 
 MIT License - feel free to use this project for your own purposes.
