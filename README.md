@@ -75,6 +75,4 @@ A modern web application that helps shopkeepers track and manage their inventory
 [🚀 Live Demo](https://zp1v56uxy8rdx5ypatb0ockcb9tr6a-oci3--5173--55edb8f4.local-credentialless.webcontainer-api.io/)
 
 [💻 GitHub Code](https://github.com/oluwoleowoeye/shopkeeper-price-tracker)
-## License
 
-MIT License - feel free to use this project for your own purposes.
