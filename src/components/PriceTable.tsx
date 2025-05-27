@@ -1,5 +1,5 @@
 import React from 'react';
-import { Clock, DollarSign, Package, Store, Tag } from 'lucide-react';
+import { Clock, DollarSign, Package, Store } from 'lucide-react';
 import type { PriceEntry } from '../types/supabase';
 
 interface PriceTableProps {
@@ -28,76 +28,83 @@ export default function PriceTable({ entries, isLoading }: PriceTableProps) {
 
   if (isLoading) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6 min-h-[300px] flex items-center justify-center">
-        <div className="animate-pulse text-gray-500">Loading recent entries...</div>
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl p-8 min-h-[300px] flex items-center justify-center">
+        <div className="animate-pulse flex items-center gap-3 text-blue-900">
+          <div className="w-6 h-6 rounded-full bg-blue-200 animate-spin" />
+          Loading recent entries...
+        </div>
       </div>
     );
   }
 
   if (entries.length === 0) {
     return (
-      <div className="bg-white rounded-lg shadow-md p-6 min-h-[300px] flex flex-col items-center justify-center text-center">
-        <Package size={48} className="text-gray-400 mb-4" />
-        <h3 className="text-lg font-medium text-gray-700">No price entries yet</h3>
-        <p className="text-gray-500 mt-2">Add your first price entry using the form above.</p>
+      <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl p-8 min-h-[300px] flex flex-col items-center justify-center text-center">
+        <Package size={64} className="text-blue-200 mb-4" />
+        <h3 className="text-xl font-medium text-blue-900">No price entries yet</h3>
+        <p className="text-gray-600 mt-2">Add your first price entry using the form.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-lg shadow-md overflow-hidden transition-all duration-300 hover:shadow-lg">
-      <div className="p-4 sm:p-6 border-b border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-800">Recent Price Entries</h2>
-        <p className="text-sm text-gray-500 mt-1">Showing the 5 most recent entries</p>
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl overflow-hidden transition-all duration-300 hover:shadow-2xl transform hover:scale-[1.01]">
+      <div className="p-6 border-b border-gray-100">
+        <h2 className="text-2xl font-semibold text-blue-900">Recent Price Entries</h2>
+        <p className="text-gray-600 mt-1">Showing the 5 most recent entries</p>
       </div>
       
       <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
-            <tr>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <div className="flex items-center gap-1">
-                  <Tag size={14} />
+        <table className="min-w-full divide-y divide-gray-100">
+          <thead>
+            <tr className="bg-gradient-to-r from-blue-50 to-teal-50">
+              <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-blue-900 uppercase tracking-wider">
+                <div className="flex items-center gap-2">
+                  <Package size={16} className="text-teal-600" />
                   <span>Item</span>
                 </div>
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <div className="flex items-center gap-1">
-                  <Store size={14} />
+              <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-blue-900 uppercase tracking-wider">
+                <div className="flex items-center gap-2">
+                  <Store size={16} className="text-teal-600" />
                   <span>Supplier</span>
                 </div>
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <div className="flex items-center gap-1">
-                  <DollarSign size={14} />
+              <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-blue-900 uppercase tracking-wider">
+                <div className="flex items-center gap-2">
+                  <DollarSign size={16} className="text-teal-600" />
                   <span>Price</span>
                 </div>
               </th>
-              <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                <div className="flex items-center gap-1">
-                  <Clock size={14} />
+              <th scope="col" className="px-6 py-4 text-left text-xs font-medium text-blue-900 uppercase tracking-wider">
+                <div className="flex items-center gap-2">
+                  <Clock size={16} className="text-teal-600" />
                   <span>Date Added</span>
                 </div>
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
-            {entries.map((entry) => (
+          <tbody className="divide-y divide-gray-100">
+            {entries.map((entry, index) => (
               <tr 
-                key={entry.id} 
-                className="hover:bg-gray-50 transition-colors duration-150"
+                key={entry.id}
+                className="hover:bg-blue-50/50 transition-colors duration-150"
+                style={{
+                  animationDelay: `${index * 100}ms`,
+                  animation: 'slideUp 0.5s ease-out forwards'
+                }}
               >
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                  {entry.item_name}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-blue-900">{entry.item_name}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {entry.supplier}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-600">{entry.supplier}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900 font-medium">
-                  {formatPrice(entry.price)}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm font-medium text-teal-600">{formatPrice(entry.price)}</div>
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                  {formatDate(entry.created_at)}
+                <td className="px-6 py-4 whitespace-nowrap">
+                  <div className="text-sm text-gray-600">{formatDate(entry.created_at)}</div>
                 </td>
               </tr>
             ))}

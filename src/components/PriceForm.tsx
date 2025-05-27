@@ -1,10 +1,9 @@
 import React, { useState } from 'react';
 import { toast } from 'react-hot-toast';
-import { PlusCircle } from 'lucide-react';
+import { PlusCircle, DollarSign, Package, Store } from 'lucide-react';
 import { supabase, addToQueue } from '../lib/supabase';
 import type { NewPriceEntry } from '../types/supabase';
 
-// Create Audio instance and preload
 const chaChing = new Audio('/assets/cha-ching.mp3');
 chaChing.preload = 'auto';
 
@@ -22,7 +21,6 @@ export default function PriceForm({ onSuccess }: PriceFormProps) {
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type } = e.target;
-    
     setFormData(prev => ({
       ...prev,
       [name]: type === 'number' ? parseFloat(value) || 0 : value
@@ -42,7 +40,7 @@ export default function PriceForm({ onSuccess }: PriceFormProps) {
     const entry = {
       ...formData,
       shopkeeper_id: 'guest',
-      date: new Date().toISOString().split('T')[0] // Current date in YYYY-MM-DD format
+      date: new Date().toISOString().split('T')[0]
     };
 
     try {
@@ -58,7 +56,6 @@ export default function PriceForm({ onSuccess }: PriceFormProps) {
         
       if (error) throw error;
       
-      // Play the cha-ching sound
       try {
         await chaChing.play();
       } catch (audioError) {
@@ -78,12 +75,16 @@ export default function PriceForm({ onSuccess }: PriceFormProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 transition-all duration-300 hover:shadow-lg">
-      <h2 className="text-xl font-semibold text-gray-800 mb-4">Add New Price Entry</h2>
+    <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl p-8 transition-all duration-300 hover:shadow-2xl transform hover:scale-[1.01]">
+      <h2 className="text-2xl font-semibold text-blue-900 mb-6 flex items-center gap-2">
+        <PlusCircle className="text-teal-600" />
+        New Price Entry
+      </h2>
       
-      <form onSubmit={handleSubmit} className="space-y-4">
-        <div>
-          <label htmlFor="item_name" className="block text-sm font-medium text-gray-700 mb-1">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        <div className="space-y-2">
+          <label htmlFor="item_name" className="flex items-center text-sm font-medium text-gray-700">
+            <Package size={16} className="mr-2" />
             Item Name
           </label>
           <input
@@ -93,13 +94,14 @@ export default function PriceForm({ onSuccess }: PriceFormProps) {
             value={formData.item_name}
             onChange={handleChange}
             placeholder="Enter item name"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+            className="w-full px-4 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             required
           />
         </div>
         
-        <div>
-          <label htmlFor="supplier" className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="space-y-2">
+          <label htmlFor="supplier" className="flex items-center text-sm font-medium text-gray-700">
+            <Store size={16} className="mr-2" />
             Supplier
           </label>
           <input
@@ -109,13 +111,14 @@ export default function PriceForm({ onSuccess }: PriceFormProps) {
             value={formData.supplier}
             onChange={handleChange}
             placeholder="Enter supplier name"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+            className="w-full px-4 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             required
           />
         </div>
         
-        <div>
-          <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-1">
+        <div className="space-y-2">
+          <label htmlFor="price" className="flex items-center text-sm font-medium text-gray-700">
+            <DollarSign size={16} className="mr-2" />
             Price
           </label>
           <input
@@ -127,7 +130,7 @@ export default function PriceForm({ onSuccess }: PriceFormProps) {
             placeholder="0.00"
             min="0.01"
             step="0.01"
-            className="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-colors"
+            className="w-full px-4 py-2.5 bg-white/50 backdrop-blur-sm border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all"
             required
           />
         </div>
@@ -135,9 +138,9 @@ export default function PriceForm({ onSuccess }: PriceFormProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-blue-900 hover:bg-blue-800 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed"
+          className="w-full bg-gradient-to-r from-blue-900 to-blue-800 hover:from-blue-800 hover:to-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-70 disabled:cursor-not-allowed transform hover:scale-[1.02] active:scale-[0.98]"
         >
-          <PlusCircle size={18} />
+          <PlusCircle size={20} />
           {isSubmitting ? 'Saving...' : 'Save Price Entry'}
         </button>
       </form>

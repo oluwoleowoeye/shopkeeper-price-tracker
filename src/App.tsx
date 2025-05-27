@@ -4,15 +4,16 @@ import { ShoppingBasket } from 'lucide-react';
 import { supabase } from './lib/supabase';
 import PriceForm from './components/PriceForm';
 import PriceTable from './components/PriceTable';
+import PriceDashboard from './components/PriceDashboard';
 import type { PriceEntry } from './types/supabase';
 
 function App() {
   const [entries, setEntries] = useState<PriceEntry[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [isSupabaseConnected, setIsSupabaseConnected] = useState(false);
+  const [view, setView] = useState<'table' | 'dashboard'>('table');
 
   useEffect(() => {
-    // Check if Supabase is connected
     const checkSupabaseConnection = async () => {
       try {
         if (!import.meta.env.VITE_SUPABASE_URL || !import.meta.env.VITE_SUPABASE_ANON_KEY) {
@@ -21,9 +22,8 @@ function App() {
           return;
         }
         
-        const { data, error } = await supabase.from('price_entries').select('count');
+        const { data, error } = await supabase.from('prices').select('count');
         if (error && error.code === 'PGRST301') {
-          // Table doesn't exist yet, but connection works
           setIsSupabaseConnected(true);
         } else {
           setIsSupabaseConnected(true);
@@ -49,10 +49,9 @@ function App() {
     setIsLoading(true);
     try {
       const { data, error } = await supabase
-        .from('price_entries')
+        .from('prices')
         .select('*')
-        .order('created_at', { ascending: false })
-        .limit(5);
+        .order('created_at', { ascending: false });
         
       if (error) throw error;
       setEntries(data || []);
@@ -64,76 +63,93 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <Toaster position="top-right" />
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-teal-50">
+      <Toaster 
+        position="top-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            background: '#1e3a8a',
+            color: '#fff',
+            borderRadius: '0.5rem',
+          },
+        }}
+      />
       
-      {/* Header */}
-      <header className="bg-blue-900 text-white shadow-md">
-        <div className="container mx-auto px-4 py-4 sm:py-6 flex items-center">
-          <ShoppingBasket size={28} className="mr-3 text-teal-400" />
-          <div>
-            <h1 className="text-xl sm:text-2xl font-bold">Shopkeeper Price Tracker</h1>
-            <p className="text-blue-200 text-sm">Track and manage your inventory prices</p>
+      <header className="bg-gradient-to-r from-blue-900 to-blue-800 text-white shadow-lg">
+        <div className="container mx-auto px-4 py-6">
+          <div className="flex items-center mb-4">
+            <div className="bg-white/10 p-3 rounded-full mr-4">
+              <ShoppingBasket size={32} className="text-teal-400" />
+            </div>
+            <div>
+              <h1 className="text-2xl sm:text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-blue-200">
+                Shopkeeper Price Tracker
+              </h1>
+              <p className="text-blue-200 text-sm sm:text-base mt-1">
+                Track and manage your inventory prices with ease
+              </p>
+            </div>
+          </div>
+          
+          <div className="flex gap-4">
+            <button
+              onClick={() => setView('table')}
+              className={`px-4 py-2 rounded-lg transition-all ${
+                view === 'table'
+                  ? 'bg-white/20 text-white'
+                  : 'text-blue-200 hover:bg-white/10'
+              }`}
+            >
+              Recent Entries
+            </button>
+            <button
+              onClick={() => setView('dashboard')}
+              className={`px-4 py-2 rounded-lg transition-all ${
+                view === 'dashboard'
+                  ? 'bg-white/20 text-white'
+                  : 'text-blue-200 hover:bg-white/10'
+              }`}
+            >
+              Dashboard
+            </button>
           </div>
         </div>
       </header>
       
-      {/* Main Content */}
       <main className="container mx-auto px-4 py-8">
         {!isSupabaseConnected ? (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-8 text-center">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">Supabase Connection Required</h2>
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl shadow-xl p-8 mb-8 text-center max-w-2xl mx-auto transform hover:scale-[1.01] transition-all">
+            <h2 className="text-2xl font-semibold text-blue-900 mb-4">
+              Supabase Connection Required
+            </h2>
             <p className="text-gray-600 mb-4">
               To use this application, you need to connect to Supabase first. Please click the "Connect to Supabase" button in the top right corner of the editor.
             </p>
-            <p className="text-gray-600 mb-6">
-              Once connected, you'll need to run the SQL migration to create the necessary table structure.
-            </p>
-            <div className="bg-gray-50 p-4 rounded-md text-sm text-left">
-              <p className="font-medium mb-2">Required SQL Migration:</p>
-              <pre className="bg-gray-800 text-white p-3 rounded-md overflow-x-auto">
-{`CREATE TABLE IF NOT EXISTS price_entries (
-  id SERIAL PRIMARY KEY,
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-  item_name TEXT NOT NULL,
-  supplier TEXT NOT NULL,
-  price NUMERIC(10,2) NOT NULL
-);
-
--- Add some sample data
-INSERT INTO price_entries (item_name, supplier, price)
-VALUES 
-  ('Organic Apples', 'Farm Fresh Produce', 2.99),
-  ('Whole Wheat Bread', 'Sunshine Bakery', 3.49),
-  ('Milk (1 Gallon)', 'Happy Cow Dairy', 4.29),
-  ('Coffee Beans', 'Mountain Roasters', 12.99),
-  ('Honey (16oz)', 'Local Bee Farm', 8.75);`}
-              </pre>
-            </div>
           </div>
         ) : (
           <>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
-              {/* Form Section */}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8 animate-fade-in">
               <div className="lg:col-span-1">
                 <PriceForm onSuccess={fetchEntries} />
               </div>
-              
-              {/* Table Section */}
               <div className="lg:col-span-2">
-                <PriceTable entries={entries} isLoading={isLoading} />
+                {view === 'table' ? (
+                  <PriceTable entries={entries.slice(0, 5)} isLoading={isLoading} />
+                ) : (
+                  <PriceDashboard entries={entries} />
+                )}
               </div>
             </div>
           </>
         )}
       </main>
       
-      {/* Footer */}
-      <footer className="bg-gray-800 text-gray-300 py-6">
+      <footer className="bg-gradient-to-r from-gray-900 to-blue-900 text-white py-8 mt-auto">
         <div className="container mx-auto px-4 text-center">
-          <p>© {new Date().getFullYear()} Shopkeeper Price Tracker</p>
-          <p className="text-sm mt-1 text-gray-400">
-            Helping shopkeepers manage inventory costs effectively
+          <p className="text-lg font-medium">© {new Date().getFullYear()} Shopkeeper Price Tracker</p>
+          <p className="text-blue-200 mt-2">
+            Empowering shopkeepers with smart price management
           </p>
         </div>
       </footer>
