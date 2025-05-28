@@ -8,8 +8,6 @@ A modern web application that helps shopkeepers track and manage their inventory
 
 - 🏪 Easy price entry with item name, supplier, and price
 - 📊 Real-time price tracking table
-- 🔒 Secure authentication and data storage
-- 🎵 Delightful sound feedback on successful entries
 - 📱 Responsive design for all devices
 
 ## Tech Stack
@@ -57,15 +55,12 @@ A modern web application that helps shopkeepers track and manage their inventory
 
 ### Solution Demo (45 seconds)
 1. "Let me show you how easy it is to use our application."
-2. "First, log in to your secure account."
-3. "Enter the item details: name, supplier, and price."
-4. "Hit save and hear the satisfying cha-ching sound confirming your entry."
-5. "View your recent entries in this clean, organized table."
+2. "Enter the item details: name, supplier, and price."
+3. "View your recent entries in this clean, organized table."
 
 ### Features Highlight (20 seconds)
 "Our application offers:
 - Simple, intuitive interface
-- Secure data storage
 - Real-time updates
 - Mobile responsiveness"
 
