@@ -58,6 +58,7 @@ A modern web application that helps shopkeepers track and manage their inventory
 2. "Enter the item details: name, supplier, and price."
 3. "View your recent entries in this clean, organized table."
 4. "Visual price trends with interactive charts."
+5. "Get price alerts on significant changes."
 
 ### Features Highlight (20 seconds)
 "Our application offers:
