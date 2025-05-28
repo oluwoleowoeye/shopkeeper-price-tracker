@@ -57,6 +57,7 @@ A modern web application that helps shopkeepers track and manage their inventory
 1. "Let me show you how easy it is to use our application."
 2. "Enter the item details: name, supplier, and price."
 3. "View your recent entries in this clean, organized table."
+4. "Visual price trends with interactive charts."
 
 ### Features Highlight (20 seconds)
 "Our application offers:
